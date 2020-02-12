@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty12345
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - wordpress-db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - ~/html:/var/www/html
+
+  nginx:
+    restart: always
+    build:
+     context: .
+     dockerfile: Dockerfile
+    ports:
+     - "80:80"
+     - "443:443"
+
+volumes:
+  wordpress-db:
